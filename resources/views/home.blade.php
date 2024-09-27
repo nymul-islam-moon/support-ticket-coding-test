@@ -14,17 +14,23 @@
                         </div>
                     @endif
 
-                    <h4>{{ __('Create Support Ticket') }}</h4>
-                    <form action="" method="POST" class="mb-4">
+                    <h4>Create Support Ticket</h4>
+                    <form action="{{ route('ticket.store') }}" method="POST" class="mb-4">
                         @csrf
                         <div class="form-group mb-3">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" id="title" class="form-control" placeholder="Enter ticket title" required>
+                            <label for="name">Name</label>
+                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter ticket name" required>
+                            @error('name')
+
+                            @enderror
                         </div>
 
                         <div class="form-group mb-3">
                             <label for="description">Description</label>
                             <textarea name="description" id="description" class="form-control" rows="4" placeholder="Enter ticket description" required></textarea>
+                            @error('description')
+                                {{ $message }}
+                            @enderror
                         </div>
 
                         <button type="submit" class="btn btn-primary">Create Ticket</button>
@@ -35,33 +41,26 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Title</th>
+                                <th>name</th>
                                 <th>Description</th>
-                                <th>Status</th>
-                                <th>Created At</th>
-                                <th>Actions</th>
+                                <th>status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach($tickets as $ticket)
+                            @foreach($tickets as $ticket)
                                 <tr>
                                     <td>{{ $ticket->id }}</td>
-                                    <td>{{ $ticket->title }}</td>
+                                    <td>{{ $ticket->name }}</td>
                                     <td>{{ $ticket->description }}</td>
-                                    <td>{{ ucfirst($ticket->status) }}</td>
-                                    <td>{{ $ticket->created_at->format('d M Y') }}</td>
                                     <td>
-                                        <!-- Example actions: view, edit, delete -->
-                                        <a href="{{ route('admin.tickets.show', $ticket->id) }}" class="btn btn-info btn-sm">View</a>
-                                        <a href="{{ route('admin.tickets.edit', $ticket->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <form action="{{ route('admin.tickets.destroy', $ticket->id) }}" method="POST" class="d-inline-block">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                        @if($ticket->status == true)
+                                            Closed
+                                        @else
+                                            Active
+                                        @endif
                                     </td>
                                 </tr>
-                            @endforeach --}}
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTicketRequest;
+use App\Mail\SendAdmin;
+use App\Models\Admin;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HomeController extends Controller
 {
@@ -23,6 +28,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+
+        $tickets = Ticket::all();
+        return view('home', compact('tickets'));
+    }
+
+    public function store_tickets(StoreTicketRequest $request) {
+        $formData = $request->validated();
+        $formData['created_by'] = auth()->id();
+        $formData['status'] = false;
+
+        $admin = Admin::where('id', 1)->first();
+        // dd($admin->email);
+        $ticket = Ticket::create($formData);
+
+        Mail::to($admin->email)->send(new SendAdmin($ticket));
+
+        return redirect()->route('home');
     }
 }
