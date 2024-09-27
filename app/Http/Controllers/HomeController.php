@@ -29,7 +29,10 @@ class HomeController extends Controller
     public function index()
     {
 
-        $tickets = Ticket::all();
+        $user_id =auth()->id();
+
+        $tickets = Ticket::where('created_by', $user_id)->get();
+
         return view('home', compact('tickets'));
     }
 
